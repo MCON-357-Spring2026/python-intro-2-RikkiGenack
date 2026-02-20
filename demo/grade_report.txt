@@ -1,0 +1,15 @@
+Grade Report: Python 101
+========================================
+
+Alice Johnson (S001)
+  Grades: [95, 88, 92]
+  Average: 91.7 - PASS
+
+Bob Smith (S002)
+  Grades: [72, 68, 75]
+  Average: 71.7 - PASS
+
+Charlie Brown (S003)
+  Grades: [55, 58, 52]
+  Average: 55.0 - FAIL
+
