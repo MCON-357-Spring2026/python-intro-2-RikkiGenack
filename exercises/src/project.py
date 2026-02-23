@@ -33,7 +33,7 @@ def format_date(dt: datetime = None) -> str:
         format_date() -> "2024-02-04" (today's date)
     """
     # TODO: Implement this function
-    pass
+    return str(dt)
 
 
 def generate_id(prefix: str, existing_ids: list) -> str:
