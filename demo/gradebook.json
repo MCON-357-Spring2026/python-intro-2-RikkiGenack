@@ -1,0 +1,29 @@
+{
+  "course_name": "Python 101",
+  "students": {
+    "S001": {
+      "name": "Alice Johnson",
+      "grades": [
+        95,
+        88,
+        92
+      ]
+    },
+    "S002": {
+      "name": "Bob Smith",
+      "grades": [
+        72,
+        68,
+        75
+      ]
+    },
+    "S003": {
+      "name": "Charlie Brown",
+      "grades": [
+        55,
+        58,
+        52
+      ]
+    }
+  }
+}

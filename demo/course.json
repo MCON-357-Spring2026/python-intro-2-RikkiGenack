@@ -1,0 +1,16 @@
+{
+  "course": "Python Crash Course",
+  "topics": [
+    "functions",
+    "classes",
+    "files",
+    "json"
+  ],
+  "week": 2,
+  "instructor": {
+    "name": "Dr. Smith",
+    "email": "smith@university.edu"
+  },
+  "enrolled_students": 25,
+  "active": true
+}
