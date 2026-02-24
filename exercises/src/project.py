@@ -13,7 +13,6 @@ Instructions:
 
 Run with: python exercise_4_project.py
 """
-
 import json
 import os
 from datetime import datetime
@@ -41,9 +40,6 @@ def format_date(dt: datetime = None) -> str:
     now = datetime.now().strftime("%Y-%m-%d")
     return now
 
-
-
-
 def generate_id(prefix: str, existing_ids: list) -> str:
     """
     Generate a new unique ID with the given prefix.
@@ -69,8 +65,6 @@ def generate_id(prefix: str, existing_ids: list) -> str:
             highest_num = num_id
     number = highest_num + 1
     return f"{prefix}_{number:04d}"
-
-
 
 
 def search_items(items: list, **criteria) -> list:
@@ -113,8 +107,6 @@ def search_items(items: list, **criteria) -> list:
             lst.append(item)
     return lst
 
-
-
 # =============================================================================
 # PART 2: BOOK CLASS
 # =============================================================================
@@ -152,7 +144,6 @@ class Book:
             self.genre= genre
         else:
             raise  ValueError
-
 
     def to_dict(self) -> dict:
         # TODO: Return dictionary with all attributes
@@ -286,7 +277,6 @@ class Library:
                 self.books = {bid: Book.from_dict(b) for bid, b in books_data.items()}
         except FileNotFoundError:
             self.books = {}
-
         try:
             with open(self.borrowers_file, "r") as f:
                 borrowers_data= json.load(f)
@@ -307,17 +297,17 @@ class Library:
         """Add a new book to the library."""
         # TODO: Generate new book_id using generate_id
         # TODO: Create Book, add to self.books, save, and return
-        my_id=generate_id("BOOK", [])
+        my_id=generate_id("BOOK", self.books.keys())
         newBook = Book(my_id, title, author, genre)
-        self.books.update({"title": title, "author": author, "genre": genre})
+        self.books.update({my_id: newBook})
         return newBook
 
     def add_borrower(self, name: str, email: str) -> Borrower:
         """Register a new borrower."""
         # TODO: Generate new borrower_id, create Borrower, add to self.borrowers, save, return
-        my_id = generate_id("BORROWER", existing_ids=[])
+        my_id = generate_id("BORROWER", self.borrowers.keys())
         newBorrower = Borrower(my_id,name, email)
-        self.borrowers.update({"name": name, "email": email})
+        self.borrowers.update({my_id:newBorrower})
         return newBorrower
 
     def checkout_book(self, book_id: str, borrower_id: str) -> bool:
@@ -337,9 +327,6 @@ class Library:
                 currBorrower.borrowed_books.append(book_id)
                 return True
         return False
-
-
-
 
     def return_book(self, book_id: str, borrower_id: str) -> bool:
         """
@@ -361,7 +348,6 @@ class Library:
                 return True
         return False
 
-
     def search_books(self, **criteria) -> list:
         """Search books by any criteria (title, author, genre, available)."""
         # TODO: Use search_items helper function
@@ -370,7 +356,6 @@ class Library:
         for b in self.books.values():
             lst.append(b.to_dict())
         return search_items(lst, **criteria)
-
 
     def get_available_books(self) -> list:
         """Get list of all available books."""
@@ -396,9 +381,16 @@ class Library:
         # - books_by_genre: dict of genre -> count
         total_books = len(self.books)
         available_books = len(self.get_available_books())
-
-        checked_out = list(filter(lambda x: not x.available, self.books.values()))
+        checked_out = len(list(filter(lambda x: not x.available, self.books.values())))
         total_borrowers= len(self.borrowers)
-        books_by_genre= {"genre": self.books.genre, "count": total_books}
 
-
+        genres={}
+        for b in self.books.values():
+            if b.genre not in genres:
+                count = 1
+                genres.update({b.genre:count})
+            else:
+                genres[b.genre] += 1
+        stats= {"total_books": total_books,"available_books": available_books, "checked_out": checked_out,
+        "total_borrowers": total_borrowers, "books_by_genre": genres}
+        return stats
