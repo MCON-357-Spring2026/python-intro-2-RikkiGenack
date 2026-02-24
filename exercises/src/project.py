@@ -289,9 +289,16 @@ class Library:
         # TODO: Save self.books to self.books_file
         # TODO: Save self.borrowers to self.borrowers_file
         # Hint: Convert Book/Borrower objects to dicts using to_dict()
-        self.books_file.write(json.dumps(self.books))
+        # I used AI to help me with this
+        books_data = {book_id: book.to_dict() for book_id, book in self.books.items()}
+        borrowers_data = {borrower_id: borrower.to_dict() for borrower_id, borrower in self.borrowers.items()}
 
-        self.borrowers_file.write(json.dumps(self.borrowers))
+        with open(self.books_file, "w") as f:
+            json.dump(books_data, f)
+
+        with open(self.borrowers_file, "w") as f:
+            json.dump(borrowers_data, f)
+
 
     def add_book(self, title: str, author: str, genre: str) -> Book:
         """Add a new book to the library."""
@@ -300,6 +307,7 @@ class Library:
         my_id=generate_id("BOOK", self.books.keys())
         newBook = Book(my_id, title, author, genre)
         self.books.update({my_id: newBook})
+        self.save()
         return newBook
 
     def add_borrower(self, name: str, email: str) -> Borrower:
@@ -308,6 +316,7 @@ class Library:
         my_id = generate_id("BORROWER", self.borrowers.keys())
         newBorrower = Borrower(my_id,name, email)
         self.borrowers.update({my_id:newBorrower})
+        self.save()
         return newBorrower
 
     def checkout_book(self, book_id: str, borrower_id: str) -> bool:
@@ -325,6 +334,7 @@ class Library:
             if currBook.available and currBorrower.can_borrow() and book_id not in self.borrowers[borrower_id].borrowed_books:
                 currBook.available =False
                 currBorrower.borrowed_books.append(book_id)
+                self.save()
                 return True
         return False
 
@@ -337,14 +347,13 @@ class Library:
         # TODO: Validate book is in borrower's borrowed_books
         # TODO: Update book.available, remove from borrowed_books
         # TODO: Save and return True
-        currBook = self.books[book_id]
-        currBorrower = self.borrowers[borrower_id]
-        if currBook in self.books and currBorrower in self.borrowers:
-            if currBook in currBorrower. get_borrower_books:
+        if book_id in self.books and borrower_id in self.borrowers:
+            currBook = self.books[book_id]
+            currBorrower = self.borrowers[borrower_id]
+            if book_id in currBorrower.borrowed_books:
                 currBook.available =True
-                currBook.save()
-                Library.borrowed_books.remove(currBook.book_id)
-                Library.borrowed_books.save()
+                currBorrower.borrowed_books.remove(book_id)
+                self.save()
                 return True
         return False
 
